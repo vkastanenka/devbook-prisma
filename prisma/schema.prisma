@@ -41,30 +41,13 @@ model Comment {
   user            User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String   @map("user_id")
 
-  commentLikes CommentLike[]
   subComments  Comment[]     @relation("CommentSubComments")
 
   @@map("comments")
 }
 
-model CommentLike {
-  id String @id @default(uuid())
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
-
-  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId String   @map("comment_id")
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @map("user_id")
-
-  @@map("comment_likes")
-}
-
 enum PostType {
   DEFAULT
-  EVENT
-  ARTICLE
 }
 
 model Post {
@@ -129,7 +112,6 @@ model User {
   headline    String?
   bio         String?  @db.Text
   website     String?
-  resume      String?
   githubRepos String[] @map("github_repos")
   skills      String[]
 
@@ -144,7 +126,6 @@ model User {
 
   addresses       Address[]
   comments        Comment[]
-  commentLikes    CommentLike[]
   contacts        User[]           @relation("contacts")
   contactsOf      User[]           @relation("contacts")
   posts           Post[]
@@ -178,9 +159,9 @@ model UserExperience {
   type        String
   schedule    String
   title       String
+  description String
   startYear   String  @map("start_year")
   endYear     String? @map("end_year")
-  description String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
